@@ -9,6 +9,7 @@ description: >-
   accessibility, shadows, spacing, alignment, hover states, animations, or any
   visual design work. This skill must always be active alongside the
   frontend-design skill to ensure correct implementation of aesthetic choices.
+allowed-tools: Read, Grep, Glob, Write
 ---
 
 # TailwindCSS UI/UX Implementation Rules
@@ -19,6 +20,39 @@ The `frontend-design` skill answers: *What should the design feel like?*
 This skill answers: *How do you implement it correctly in TailwindCSS?*
 
 Always follow every rule in this document when generating TailwindCSS code. Violations of these rules are implementation bugs.
+
+---
+
+## 0. Project Design System — Analyze and Persist
+
+Before applying the generic rules below, check whether this project has a persisted design system.
+
+### Current project context:
+
+!`if [ -f design-system.md ]; then cat design-system.md; else echo "NO_DESIGN_SYSTEM_FILE"; fi`
+
+### If the output above contains actual design system content (NOT "NO_DESIGN_SYSTEM_FILE"):
+
+The project has a persisted design system. **Use those project-specific values as overrides** to the generic rules in Sections 1-6:
+- If the design system specifies a different default shadow than `shadow-sm`, use that value.
+- If the design system specifies a color palette, spacing rhythm, or border-radius convention, prefer those over generic defaults.
+- The generic rules in Sections 1-6 still apply for anything **not specified** in the design system file.
+- Treat the design system file as the single source of truth for this project's visual conventions.
+
+### If the output above IS "NO_DESIGN_SYSTEM_FILE":
+
+This project has no persisted design system yet. **As part of your first response**, perform a lightweight analysis:
+
+1. Scan the project for existing TailwindCSS patterns using the procedure in `references/design-system-analysis.md`.
+2. Generate a `design-system.md` file in the project root with the findings.
+3. Inform the user briefly: *"I analyzed your project's existing design patterns and saved them to `design-system.md`. I'll use these as context in future sessions."*
+4. Then proceed with the user's actual task using the discovered patterns.
+
+**Important:** Keep the analysis fast (6-10 tool calls). Do not block the user's request — scan, generate the file, and move on. If the project has no TailwindCSS files yet, generate a minimal file noting "New project — using skill defaults."
+
+### Refreshing the design system
+
+If the user says "refresh design system", "re-analyze design patterns", "update design-system.md", or similar — re-run the full scanning procedure from `references/design-system-analysis.md` and overwrite the existing `design-system.md`.
 
 ---
 
@@ -161,6 +195,7 @@ See `references/anti-patterns.md` for detailed before/after code examples for ea
 
 Consult these for detailed code patterns when implementing specific features:
 
+- `references/design-system-analysis.md` — **Scanning procedure**, pattern detection instructions, and `design-system.md` template (used by Section 0)
 - `references/shadow-and-depth.md` — Shadow hierarchy, dark mode shadows, colored shadows, 3D hover effects, **glassmorphism**, **neumorphism**, **modern gradients**
 - `references/layout-and-spacing.md` — Container patterns, flex/grid layouts, flush alignment, spacing scale, **bento grids**, **container queries**
 - `references/responsive-patterns.md` — Mobile-first patterns, responsive grids, typography scaling, **fluid typography with clamp()**
