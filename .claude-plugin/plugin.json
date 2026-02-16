@@ -1,0 +1,8 @@
+{
+  "name": "tailwind-ui-rules",
+  "version": "1.0.0",
+  "description": "Concrete TailwindCSS UI/UX implementation rules covering shadows, layout alignment, spacing systems, responsive patterns, and interactive states. Complements the frontend-design skill with actionable code-level guidance.",
+  "author": {
+    "name": "Mark Benz"
+  }
+}
