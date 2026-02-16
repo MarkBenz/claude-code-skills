@@ -21,6 +21,38 @@ Concrete TailwindCSS UI/UX implementation rules covering shadows, layout alignme
 | `responsive-patterns.md` | Mobile-first patterns, responsive grids, typography scaling, fluid typography with clamp() |
 | `interactive-states.md` | Button/input/card/toggle state patterns, focus rings, transitions, skeleton loading, prefers-reduced-motion, advanced card variants |
 | `anti-patterns.md` | 12 common AI mistakes with wrong code → correct code examples, dark mode surfaces, motion accessibility |
+| `design-system-analysis.md` | Scanning procedure for auto-detecting project design patterns and persisting them to `design-system.md` |
+
+#### Design System Persistence
+
+On first activation in a project, the skill automatically:
+1. Scans your codebase for existing TailwindCSS patterns (shadows, colors, spacing, layout, etc.)
+2. Generates a `design-system.md` file in the project root
+3. Uses those patterns as context in all future sessions
+
+To re-analyze: ask Claude to *"refresh design system"*.
+
+---
+
+### audit-design
+
+A slash command (`/audit-design`) that audits your project's frontend code against the TailwindCSS best practice rules. Produces a structured report with:
+
+- **Critical** issues (accessibility violations)
+- **Major** issues (visual inconsistency, missing dark mode, shadow overuse)
+- **Minor** issues (missing transitions, suboptimal z-index)
+- **What's Good** (positive reinforcement)
+- **Suggested Fixes** with copy-pasteable code snippets
+
+```bash
+# Audit entire project
+/audit-design
+
+# Audit specific file or directory
+/audit-design src/components/
+```
+
+If a `design-system.md` exists, the audit also checks for **drift** between documented patterns and actual code.
 
 ## Installation
 
