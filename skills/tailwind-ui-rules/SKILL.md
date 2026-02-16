@@ -5,8 +5,10 @@ description: >-
   production-grade frontends. Use when the user asks to build a component with
   TailwindCSS, fix layout alignment, add shadows or depth effects, create a
   responsive layout, add hover or focus states, fix spacing issues, build a
-  card or dashboard layout, or when working on any frontend implementation
-  using Tailwind CSS utility classes. Complements the frontend-design aesthetic
+  card or dashboard layout, create a bento grid, add glassmorphism effects,
+  implement skeleton loading, add dark mode, use container queries, implement
+  fluid typography, or when working on any frontend implementation using
+  Tailwind CSS utility classes. Complements the frontend-design aesthetic
   skill with actionable implementation patterns and anti-patterns.
 ---
 
@@ -40,7 +42,7 @@ Define a **maximum of 3 shadow levels** per design system. More levels create vi
 - Dark mode: reduce or remove shadows. Use `dark:shadow-none` or `dark:shadow-black/20` with a reduced level.
 - Colored shadows (`shadow-blue-500/25`) only on primary action elements — never on neutral containers.
 
-See `references/shadow-and-depth.md` for full code examples, dark mode patterns, and 3D hover effects.
+See `references/shadow-and-depth.md` for full code examples, dark mode patterns, 3D hover effects, glassmorphism, neumorphism, and gradient techniques.
 
 ---
 
@@ -56,7 +58,7 @@ All sibling elements within a section **must share consistent alignment edges**.
 - All content blocks within a section share the same left padding edge. If a heading and its paragraph have different left offsets, it is a bug.
 - Avoid `w-full` on elements inside flex containers when you actually need `flex-1` or `flex-grow`.
 
-See `references/layout-and-spacing.md` for flex patterns, grid patterns, flush alignment examples, and spacing scale reference.
+See `references/layout-and-spacing.md` for flex patterns, grid patterns, bento grids, container queries, flush alignment examples, and spacing scale reference.
 
 ---
 
@@ -99,7 +101,7 @@ See `references/layout-and-spacing.md` for the complete spacing scale and sectio
 - Touch targets: all interactive elements must be at minimum `h-10 w-10` (40px) on mobile for accessible tap targets.
 - Never hard-code widths (`w-[800px]`). Use `max-w-*` utilities or responsive fractions.
 
-See `references/responsive-patterns.md` for complete responsive navigation, card grid, and typography scale patterns.
+See `references/responsive-patterns.md` for complete responsive navigation, card grid, typography scale, and fluid typography (clamp) patterns.
 
 ---
 
@@ -129,7 +131,7 @@ See `references/responsive-patterns.md` for complete responsive navigation, card
 - Hover effects on cards: step up shadow one level + subtle `translate-y` or border color change. Never use only color change on a card hover.
 - Form inputs need: default border, `focus-visible:ring-2`, error state (`border-red-500 focus-visible:ring-red-500`), and disabled state.
 
-See `references/interactive-states.md` for complete button, input, card, and toggle state patterns.
+See `references/interactive-states.md` for complete button, input, card, toggle state patterns, skeleton loading, prefers-reduced-motion, and advanced card variants.
 
 ---
 
@@ -147,8 +149,10 @@ See `references/interactive-states.md` for complete button, input, card, and tog
 | No `dark:` variants | Broken dark mode | Add `dark:` for bg, text, border, shadow |
 | State changes without transitions | Jarring, feels broken | `transition-colors duration-150` |
 | Desktop-first classes (`block sm:hidden`) | Backwards; mobile undefined | `hidden sm:block` (mobile-first) |
+| Single dark bg for everything | No depth in dark mode | 3-level surface: `bg-gray-950` / `bg-gray-900` / `bg-gray-800` |
+| Animations without `motion-safe:` | Ignores vestibular disorders | `motion-safe:animate-bounce`, `motion-safe:hover:-translate-y-0.5` |
 
-See `references/anti-patterns.md` for detailed before/after code examples for each mistake.
+See `references/anti-patterns.md` for detailed before/after code examples for each mistake (12 anti-patterns total).
 
 ---
 
@@ -156,8 +160,8 @@ See `references/anti-patterns.md` for detailed before/after code examples for ea
 
 Consult these for detailed code patterns when implementing specific features:
 
-- `references/shadow-and-depth.md` — Shadow hierarchy, dark mode shadows, colored shadows, 3D hover effects
-- `references/layout-and-spacing.md` — Container patterns, flex/grid layouts, flush alignment, spacing scale
-- `references/responsive-patterns.md` — Mobile-first patterns, responsive grids, typography scaling
-- `references/interactive-states.md` — Button/input/card/toggle state patterns, focus rings, transitions
-- `references/anti-patterns.md` — 10 common AI mistakes with wrong code → correct code examples
+- `references/shadow-and-depth.md` — Shadow hierarchy, dark mode shadows, colored shadows, 3D hover effects, **glassmorphism**, **neumorphism**, **modern gradients**
+- `references/layout-and-spacing.md` — Container patterns, flex/grid layouts, flush alignment, spacing scale, **bento grids**, **container queries**
+- `references/responsive-patterns.md` — Mobile-first patterns, responsive grids, typography scaling, **fluid typography with clamp()**
+- `references/interactive-states.md` — Button/input/card/toggle state patterns, focus rings, transitions, **skeleton loading**, **prefers-reduced-motion**, **advanced card variants**
+- `references/anti-patterns.md` — 12 common AI mistakes with wrong code → correct code examples, including **dark mode surface layers** and **motion accessibility**

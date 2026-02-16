@@ -221,6 +221,115 @@ Define a consistent vertical rhythm between major page sections. All sections on
 
 **Rule**: All major sections use the same `py-*` values. Variation should be intentional and rare. When every section has different vertical padding, the page feels chaotic. When they share the same values, the page has a steady, confident rhythm.
 
+## Bento Grid Layout
+
+Bento grids display cards in an asymmetric, visually interesting grid where items span variable rows and columns. This is the signature layout pattern of modern dashboards and marketing pages.
+
+### Basic Bento Grid
+
+```html
+<div class="grid grid-cols-2 lg:grid-cols-4 auto-rows-[180px] gap-4">
+  <!-- Large featured item: spans 2 columns and 2 rows -->
+  <div class="col-span-2 row-span-2 rounded-2xl bg-blue-600 p-6 text-white">
+    <h2 class="text-2xl font-bold">Featured</h2>
+    <p class="mt-2 text-blue-100">Main highlight content.</p>
+  </div>
+
+  <!-- Standard items -->
+  <div class="rounded-2xl bg-gray-100 p-5 dark:bg-gray-800">
+    <h3 class="font-semibold">Metric A</h3>
+  </div>
+  <div class="rounded-2xl bg-gray-100 p-5 dark:bg-gray-800">
+    <h3 class="font-semibold">Metric B</h3>
+  </div>
+
+  <!-- Wide item: spans 2 columns -->
+  <div class="col-span-2 rounded-2xl bg-gray-100 p-5 dark:bg-gray-800">
+    <h3 class="font-semibold">Wide Content</h3>
+  </div>
+
+  <!-- Tall item: spans 2 rows -->
+  <div class="row-span-2 rounded-2xl bg-gray-100 p-5 dark:bg-gray-800">
+    <h3 class="font-semibold">Tall Content</h3>
+  </div>
+</div>
+```
+
+### Bento Grid Rules
+
+- Use `auto-rows-[180px]` or `auto-rows-fr` to set a consistent row height. Without this, rows collapse to content height and the bento effect is lost.
+- On mobile, collapse to `grid-cols-1` or `grid-cols-2`. Reset `col-span-2` items to `col-span-1` on small screens: `col-span-1 sm:col-span-2`.
+- Use `rounded-2xl` (not `rounded-lg`) for bento items — the larger radius matches the spacious aesthetic.
+- Keep gap consistent: `gap-4` for compact bentos, `gap-6` for spacious ones. Never mix gap sizes within one bento.
+- All items should have the same `p-*` value for consistent internal padding.
+
+### Responsive Bento
+
+```html
+<!-- Collapses gracefully on mobile -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[160px] sm:auto-rows-[180px] gap-4">
+  <div class="sm:col-span-2 sm:row-span-2 rounded-2xl bg-blue-600 p-6">
+    Featured (full-width on mobile, 2x2 on tablet+)
+  </div>
+  <div class="rounded-2xl bg-gray-100 p-5">Item</div>
+  <div class="rounded-2xl bg-gray-100 p-5">Item</div>
+  <div class="sm:col-span-2 rounded-2xl bg-gray-100 p-5">Wide item</div>
+</div>
+```
+
+## Container Queries
+
+Container queries allow components to adapt based on their parent container's size instead of the viewport. This makes components truly reusable across different layout contexts (sidebar vs main content, modal vs page).
+
+### When to Use Container Queries vs Media Queries
+
+| Use Container Queries | Use Media Queries |
+|----------------------|-------------------|
+| Component adapts to its container width | Layout adapts to viewport width |
+| Same component used in sidebar AND main content | Global layout changes (nav, footer) |
+| Widget that may appear in different contexts | Dark mode, print styles |
+| Card that needs to be responsive inside any parent | Page-level responsive breakpoints |
+
+### Container Query Pattern
+
+```html
+<!-- Mark the container -->
+<div class="@container">
+  <!-- Card adapts to container width, not viewport -->
+  <div class="flex flex-col @md:flex-row @md:items-center gap-4 p-4">
+    <img class="w-full @md:w-32 @md:h-32 rounded-lg object-cover" src="..." alt="..." />
+    <div>
+      <h3 class="text-lg @lg:text-xl font-semibold">Title</h3>
+      <p class="text-sm text-gray-600">Description</p>
+    </div>
+  </div>
+</div>
+```
+
+### Named Containers
+
+```html
+<!-- Named container for specificity -->
+<aside class="@container/sidebar w-64">
+  <div class="@sm/sidebar:text-xs @md/sidebar:text-sm">
+    Adapts to sidebar width specifically.
+  </div>
+</aside>
+```
+
+### Container Query Breakpoints
+
+| Prefix | Min Width |
+|--------|-----------|
+| `@xs:` | 20rem (320px) |
+| `@sm:` | 24rem (384px) |
+| `@md:` | 28rem (448px) |
+| `@lg:` | 32rem (512px) |
+| `@xl:` | 36rem (576px) |
+| `@2xl:` | 42rem (672px) |
+
+**Rule**: Use container queries for reusable components. Use media queries (responsive prefixes) for page-level layout decisions. Do not mix both on the same element.
+
 ## Common Spacing Mistakes
 
 | Mistake | Fix |
@@ -231,3 +340,5 @@ Define a consistent vertical rhythm between major page sections. All sections on
 | Arbitrary values like `p-[13px]` | Use scale values: `p-3` (12px) or `p-3.5` (14px) |
 | No padding on mobile, too much on desktop | Use progressive padding: `px-4 sm:px-6 lg:px-8` |
 | Mixing spacing approaches in the same component | Pick one approach (gap or margin) per layout context and be consistent |
+| Bento items with inconsistent padding | All bento items use the same `p-*` value |
+| Missing auto-rows on bento grids | Use `auto-rows-[180px]` to set consistent row height |

@@ -166,13 +166,81 @@ Rule: All interactive elements must be at least 44x44px on mobile (WCAG 2.5.5).
 </a>
 ```
 
+## Fluid Typography with clamp()
+
+Instead of stepping through fixed font sizes at breakpoints, fluid typography scales smoothly between a minimum and maximum size. This produces more natural, proportional text at every viewport width.
+
+### Fluid Type Pattern
+
+```html
+<!-- Fluid hero heading: 1.875rem at 320px → 3.75rem at 1280px -->
+<h1 class="font-bold tracking-tight" style="font-size: clamp(1.875rem, 1.25rem + 2.5vw, 3.75rem);">
+  Fluid Heading
+</h1>
+
+<!-- Fluid section heading: 1.5rem → 2.25rem -->
+<h2 class="font-bold" style="font-size: clamp(1.5rem, 1.125rem + 1.5vw, 2.25rem);">
+  Section Title
+</h2>
+
+<!-- Fluid body text: 1rem → 1.125rem -->
+<p style="font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);">
+  Body text that scales subtly.
+</p>
+```
+
+### Defining Fluid Types in Tailwind Config
+
+For cleaner markup, define fluid sizes in `tailwind.config.js`:
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      fontSize: {
+        'fluid-sm': 'clamp(0.875rem, 0.8rem + 0.25vw, 1rem)',
+        'fluid-base': 'clamp(1rem, 0.95rem + 0.25vw, 1.125rem)',
+        'fluid-lg': 'clamp(1.25rem, 1rem + 1vw, 1.75rem)',
+        'fluid-xl': 'clamp(1.5rem, 1.125rem + 1.5vw, 2.25rem)',
+        'fluid-2xl': 'clamp(1.875rem, 1.25rem + 2.5vw, 3rem)',
+        'fluid-3xl': 'clamp(2.25rem, 1.5rem + 3vw, 3.75rem)',
+      }
+    }
+  }
+}
+```
+
+Then use as: `<h1 class="text-fluid-3xl font-bold tracking-tight">`
+
+### Fluid Typography Rules
+
+- **clamp(min, preferred, max)**: min is the mobile size, max is the desktop size, preferred is the scaling formula.
+- The `vw` value in the preferred expression controls how aggressively the size scales. `2.5vw` is aggressive (headings), `0.25vw` is subtle (body text).
+- Body text rarely needs fluid sizing. `text-base` (16px) reads well at all sizes. Only make body text fluid if the design specifically calls for it.
+- Always include a `rem` base in the preferred value (e.g., `1.25rem + 2.5vw`), not just `vw` alone. Pure `vw` sizing becomes unreadably small on narrow viewports.
+- **Line height**: Use `leading-tight` (1.25) for fluid headings. Line height does not need to be fluid — Tailwind's defaults handle it.
+- Fluid type works best for headings (h1-h3). For h4-h6 and body, breakpoint-based scaling is simpler and sufficient.
+
+### When to Use Fluid vs Breakpoint Scaling
+
+| Element | Fluid (clamp) | Breakpoint (sm:/lg:) |
+|---------|---------------|---------------------|
+| Hero headings (h1) | Preferred — smooth scaling | Acceptable but jumpy |
+| Section headings (h2) | Good fit | Also fine |
+| Subheadings (h3-h4) | Optional | Preferred — simpler |
+| Body text | Rarely needed | Standard approach |
+| Labels, captions | Never | Keep at fixed size |
+
 ## Common Responsive Mistakes
 
 | Mistake | Fix |
 |---------|-----|
 | Fixed widths (w-[800px]) | Use max-w-* or responsive fractions |
-| text-5xl on mobile headings | text-3xl sm:text-4xl lg:text-5xl |
+| text-5xl on mobile headings | text-3xl sm:text-4xl lg:text-5xl, or use fluid clamp() |
 | Horizontal scroll on mobile | Test at 320px width; use overflow-hidden or w-full |
 | Hidden content never shown | hidden sm:block (not block sm:hidden which hides permanently) |
 | Same gap on all screen sizes | gap-4 lg:gap-6 (scale up for larger screens) |
 | No touch target sizing | min-h-[44px] on all interactive elements |
+| Pure vw font sizing | Always use clamp() with a rem base: clamp(1.5rem, 1rem + 2vw, 3rem) |
+| Fluid body text | Body text doesn't need fluid sizing — text-base is fine everywhere |

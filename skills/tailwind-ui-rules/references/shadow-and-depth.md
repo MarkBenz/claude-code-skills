@@ -150,3 +150,127 @@ Common mistakes that undermine a coherent depth system:
 | `shadow-xl` + `border-2` + `ring-2` | Triple depth cues compete with each other and create visual noise | Pick one depth technique per element |
 
 A well-structured shadow system uses fewer levels, applies them consistently, and adapts cleanly for dark mode. When in doubt, use less shadow rather than more.
+
+## Glassmorphism (Frosted Glass)
+
+Glassmorphism uses translucent backgrounds with backdrop blur to create a frosted glass effect. Use it for overlays, modals, floating navigation, or feature cards that sit on top of vibrant backgrounds.
+
+### Basic Glassmorphism Pattern
+
+```html
+<!-- Glass card on a colorful background -->
+<div class="relative bg-gradient-to-br from-purple-500 to-blue-600 p-12 rounded-2xl">
+  <div class="
+    rounded-xl p-6
+    bg-white/10
+    backdrop-blur-md
+    border border-white/20
+    shadow-lg
+  ">
+    <h3 class="text-lg font-semibold text-white">Glass Card</h3>
+    <p class="mt-2 text-white/80">Content visible through frosted glass.</p>
+  </div>
+</div>
+```
+
+### Glassmorphism Variants
+
+```html
+<!-- Light glass (for dark backgrounds) -->
+<div class="bg-white/15 backdrop-blur-md border border-white/20">
+
+<!-- Dark glass (for light backgrounds) -->
+<div class="bg-black/10 backdrop-blur-md border border-black/10">
+
+<!-- Frosted navigation bar -->
+<nav class="
+  sticky top-0 z-20
+  bg-white/70 dark:bg-gray-900/70
+  backdrop-blur-lg
+  border-b border-gray-200/50 dark:border-gray-700/50
+">
+```
+
+### Glassmorphism Rules
+
+- **Requires a colorful or image background** to be visible. On a solid white/gray background, glass effects are invisible and the blur adds GPU cost for nothing.
+- Use `backdrop-blur-md` (12px) as default. `backdrop-blur-sm` (4px) is too subtle; `backdrop-blur-xl` (24px) is heavy and can obscure the background entirely.
+- Background opacity: `bg-white/10` to `bg-white/30` for dark backgrounds. `bg-black/5` to `bg-black/15` for light backgrounds. Going higher than /30 defeats the glass effect.
+- Always add `border border-white/20` — without the border, glass elements blend into the background and lose their shape.
+- **Performance**: `backdrop-blur` is GPU-intensive. Limit to 2-3 glass elements per page. Never apply to every card in a grid.
+- **Text contrast**: Glass surfaces reduce contrast. Use bold text (`font-semibold` or `font-bold`) and ensure `text-white` or `text-gray-900` depending on background.
+
+## Neumorphism (Soft UI)
+
+Neumorphism creates an extruded or inset appearance using paired light and dark shadows on a matching background. Use sparingly — only for toggle controls, sliders, or small decorative elements. Never for entire layouts.
+
+### Neumorphic Toggle
+
+```html
+<!-- Neumorphic container (background must match shadow base) -->
+<div class="bg-gray-200 rounded-2xl p-1 inline-flex
+  shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.7)]
+">
+  <button class="px-4 py-2 rounded-xl text-sm font-medium
+    bg-gray-200
+    shadow-[2px_2px_4px_rgba(0,0,0,0.1),-2px_-2px_4px_rgba(255,255,255,0.7)]
+    text-gray-700
+  ">
+    Option A
+  </button>
+  <button class="px-4 py-2 rounded-xl text-sm font-medium text-gray-400">
+    Option B
+  </button>
+</div>
+```
+
+### Neumorphism Rules
+
+- **Background color must match** the element color. Neumorphism only works when the element appears extruded from a surface of the same color.
+- Limit to small interactive controls (toggles, sliders, icon buttons). Full neumorphic layouts look flat and have poor contrast.
+- Does NOT work in dark mode. The dual-shadow technique requires a light, neutral surface.
+- Pair the light shadow (`rgba(255,255,255,0.7)`) with a dark shadow (`rgba(0,0,0,0.1)`) — offset in opposite directions.
+- Never combine neumorphism with `shadow-*` Tailwind utilities. They conflict visually.
+
+## Modern Gradient Techniques
+
+### Standard TailwindCSS Gradients
+
+```html
+<!-- Linear gradient -->
+<div class="bg-gradient-to-r from-blue-500 to-purple-600">
+
+<!-- Gradient with via color (3-stop) -->
+<div class="bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
+
+<!-- Gradient text -->
+<h1 class="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+  Gradient Heading
+</h1>
+
+<!-- Subtle gradient for backgrounds -->
+<div class="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+```
+
+### Gradient Rules
+
+- **Direction matters**: `to-r` (horizontal) for wide elements like banners. `to-b` (vertical) for page backgrounds and sections. `to-br` (diagonal) for cards and featured elements.
+- Use `via-*` for 3-stop gradients that feel more natural. Two-stop gradients can look harsh.
+- **Gradient text**: Always use `bg-clip-text text-transparent`. Only apply to headings and short labels — never body text (illegible).
+- **Dark mode gradients**: Always define `dark:from-*` and `dark:to-*`. Light gradients on dark backgrounds look broken.
+- Limit gradient backgrounds to 1-2 per page. Too many competing gradients create visual chaos.
+
+### Mesh Gradient Effect (CSS approximation)
+
+```html
+<!-- Approximate mesh gradient using layered radials (requires custom CSS) -->
+<div class="relative overflow-hidden rounded-2xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-blue-400/30 via-transparent to-purple-400/30"></div>
+  <div class="absolute inset-0 bg-gradient-to-tl from-pink-400/20 via-transparent to-cyan-400/20"></div>
+  <div class="relative z-10 p-8">
+    Content on top of mesh-like gradient.
+  </div>
+</div>
+```
+
+**Rule**: True mesh gradients require CSS `background: radial-gradient(...)` layering or tools like MeshGradient. The TailwindCSS approximation above works for subtle background effects but cannot replicate complex mesh patterns. For hero sections needing true mesh gradients, use custom CSS or an SVG/image background.

@@ -312,3 +312,82 @@ AI code generators tend to repeat the same visual and structural mistakes. These
 ```
 
 **Why**: Tailwind breakpoints (`sm:`, `md:`, `lg:`) apply upward from the specified width. Writing base styles for mobile and layering wider breakpoints on top means the smallest screen always works. The desktop-first approach fights the framework and leads to contradictory overrides.
+
+---
+
+## 11. Flat Dark Mode (No Surface Hierarchy)
+
+**Problem**: Dark mode uses a single background color for everything — page, cards, modals, and dropdowns all share `bg-gray-900`. Without surface layers, there is no visual hierarchy and elements merge together.
+
+**Wrong:**
+```html
+<!-- Everything is the same dark gray — no depth -->
+<div class="min-h-screen bg-gray-900 text-white">
+  <nav class="bg-gray-900 border-b border-gray-700 px-6 py-4">Navigation</nav>
+  <main class="p-6">
+    <div class="rounded-lg bg-gray-900 border border-gray-700 p-6">
+      <h2 class="text-lg font-semibold">Card</h2>
+      <p class="text-gray-400">Card merges into the page background.</p>
+    </div>
+  </main>
+</div>
+```
+
+**Correct:**
+```html
+<!-- Three-level surface hierarchy creates depth -->
+<div class="min-h-screen bg-gray-950 text-gray-100">
+  <nav class="bg-gray-900 border-b border-gray-800 px-6 py-4">Navigation</nav>
+  <main class="p-6">
+    <div class="rounded-lg bg-gray-900 border border-gray-800 p-6">
+      <h2 class="text-lg font-semibold text-gray-50">Card</h2>
+      <p class="text-gray-400">Card is clearly elevated from the page.</p>
+    </div>
+  </main>
+</div>
+```
+
+**Why**: Dark mode needs a surface layer system. Use 3 levels:
+- **Base** (`bg-gray-950`): Page background — darkest
+- **Surface** (`bg-gray-900`): Cards, panels, nav — one step lighter
+- **Elevated** (`bg-gray-800`): Modals, dropdowns, tooltips — another step lighter
+
+Each level is subtly lighter, creating depth without shadows. Never use pure `bg-black` — it creates excessive contrast and eye strain.
+
+### Additional Dark Mode Rules
+
+- **Desaturate accent colors**: Use `dark:bg-blue-500` or `dark:text-blue-400` instead of `dark:bg-blue-600`. Bright saturated colors on dark backgrounds are harsh.
+- **Reduce font weight appearance**: Light text on dark backgrounds appears visually heavier. Consider `dark:font-normal` where you use `font-medium` in light mode.
+- **Borders over shadows**: Use `dark:border dark:border-gray-800` instead of shadows for element separation. Shadows are nearly invisible on dark surfaces.
+- **Image handling**: Add `dark:brightness-90` to images to prevent them from being blindingly bright on a dark page.
+
+---
+
+## 12. Ignoring prefers-reduced-motion
+
+**Problem**: Animations play regardless of the user's OS-level "reduce motion" setting. This can cause discomfort or nausea for users with vestibular disorders.
+
+**Wrong:**
+```html
+<div class="animate-bounce">
+  <svg>Scroll down icon</svg>
+</div>
+<div class="hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+  Card with movement on hover.
+</div>
+```
+
+**Correct:**
+```html
+<div class="motion-safe:animate-bounce">
+  <svg>Scroll down icon</svg>
+</div>
+<div class="
+  hover:shadow-md transition-shadow duration-200
+  motion-safe:hover:-translate-y-0.5 motion-safe:transition-all
+">
+  Card: shadow change always, movement only when allowed.
+</div>
+```
+
+**Why**: The `motion-safe:` prefix ensures animations only play when the user's OS allows motion. The `motion-reduce:` prefix provides alternatives for reduced-motion users. Color and opacity changes are generally safe; position and scale changes should always be gated behind `motion-safe:`.
