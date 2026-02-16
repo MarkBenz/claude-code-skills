@@ -1,15 +1,14 @@
 ---
 name: tailwind-ui-rules
 description: >-
-  This skill provides concrete TailwindCSS implementation rules for building
-  production-grade frontends. Use when the user asks to build a component with
-  TailwindCSS, fix layout alignment, add shadows or depth effects, create a
-  responsive layout, add hover or focus states, fix spacing issues, build a
-  card or dashboard layout, create a bento grid, add glassmorphism effects,
-  implement skeleton loading, add dark mode, use container queries, implement
-  fluid typography, or when working on any frontend implementation using
-  Tailwind CSS utility classes. Complements the frontend-design aesthetic
-  skill with actionable implementation patterns and anti-patterns.
+  Enforce concrete TailwindCSS implementation rules for any frontend or UI/UX
+  task. Use this skill whenever the user asks to build, design, create, fix, or
+  improve any web page, component, layout, dashboard, landing page, form, card,
+  modal, navigation, sidebar, or frontend interface. Also activate when the user
+  mentions HTML, CSS, TailwindCSS, UI, UX, responsive design, dark mode,
+  accessibility, shadows, spacing, alignment, hover states, animations, or any
+  visual design work. This skill must always be active alongside the
+  frontend-design skill to ensure correct implementation of aesthetic choices.
 ---
 
 # TailwindCSS UI/UX Implementation Rules
