@@ -54,6 +54,46 @@ A slash command (`/audit-design`) that audits your project's frontend code again
 
 If a `design-system.md` exists, the audit also checks for **drift** between documented patterns and actual code.
 
+---
+
+### generate-component
+
+A slash command (`/generate-component`) that scaffolds production-ready UI components matching your project's design system. Auto-detects the tech stack (React/TSX, Vue, Svelte, Astro, plain HTML) and applies all design rules.
+
+```bash
+/generate-component card                # Standard card with hover, dark mode, focus
+/generate-component modal confirmation  # Confirmation dialog variant
+/generate-component form horizontal     # Form with horizontal labels
+/generate-component table striped       # Data table with striped rows
+/generate-component hero                # Hero section
+/generate-component nav                 # Navigation bar with mobile menu
+```
+
+Every generated component includes: dark mode, hover/focus/disabled states, transitions, responsive layout, accessibility, and motion safety — all matching the `design-system.md` if it exists.
+
+---
+
+### color-palette
+
+A slash command (`/color-palette`) that analyzes, generates, and optimizes your project's color palette with dark mode mapping and WCAG contrast checking.
+
+```bash
+/color-palette                    # Analyze current color usage
+/color-palette analyze            # Same as above
+/color-palette generate           # Generate a new SaaS palette
+/color-palette generate warm      # Warm-toned palette
+/color-palette generate brand #3B82F6  # Build around a brand color
+/color-palette harmonize          # Fix inconsistencies in existing colors
+/color-palette export             # Output as Tailwind config / CSS variables
+```
+
+Features:
+- Detects inconsistent primary colors (e.g., `blue-500` vs `blue-600` used interchangeably)
+- Checks all text/bg combos against **WCAG AA** contrast ratios
+- Generates complete light + dark mode color mapping
+- Exports as `tailwind.config.js` or CSS custom properties
+- Can update your `design-system.md` with the optimized palette
+
 ## Installation
 
 There are several ways to install these skills in Claude Code:

@@ -1,7 +1,7 @@
 {
   "name": "claude-code-skills",
-  "version": "1.1.0",
-  "description": "A collection of Claude Code skills for frontend development. Includes TailwindCSS UI/UX implementation rules and a design audit command.",
+  "version": "1.2.0",
+  "description": "A collection of Claude Code skills for frontend development. Includes TailwindCSS UI/UX rules, design system analysis, design audit, component generator, and color palette tools.",
   "author": {
     "name": "Mark Benz"
   }
