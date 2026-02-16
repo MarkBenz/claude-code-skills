@@ -16,29 +16,76 @@ Concrete TailwindCSS UI/UX implementation rules covering shadows, layout alignme
 
 | File | Content |
 |------|---------|
-| `shadow-and-depth.md` | Shadow hierarchy, dark mode shadows, colored shadows, 3D hover effects |
-| `layout-and-spacing.md` | Container patterns, flex/grid layouts, flush alignment, spacing scale |
-| `responsive-patterns.md` | Mobile-first patterns, responsive grids, typography scaling |
-| `interactive-states.md` | Button/input/card/toggle state patterns, focus rings, transitions |
-| `anti-patterns.md` | 10 common AI mistakes with wrong code → correct code examples |
+| `shadow-and-depth.md` | Shadow hierarchy, dark mode shadows, colored shadows, 3D hover effects, glassmorphism, neumorphism, modern gradients |
+| `layout-and-spacing.md` | Container patterns, flex/grid layouts, flush alignment, spacing scale, bento grids, container queries, overflow/shadow clipping |
+| `responsive-patterns.md` | Mobile-first patterns, responsive grids, typography scaling, fluid typography with clamp() |
+| `interactive-states.md` | Button/input/card/toggle state patterns, focus rings, transitions, skeleton loading, prefers-reduced-motion, advanced card variants |
+| `anti-patterns.md` | 12 common AI mistakes with wrong code → correct code examples, dark mode surfaces, motion accessibility |
 
 ## Installation
 
-### As a local plugin
+There are several ways to install these skills in Claude Code:
+
+### Option 1: Register as a Marketplace (recommended)
+
+Add this repository as a plugin marketplace so Claude Code can discover and manage the skills:
 
 ```bash
-claude --plugin-dir /path/to/this/repo
+# Inside Claude Code, run:
+/plugin marketplace add MarkBenz/claude-code-skills
 ```
 
-### As a global plugin
+Then install the skill:
 
-Add to your Claude Code settings:
+```bash
+/plugin install tailwind-ui-rules@MarkBenz-claude-code-skills
+```
+
+To share with your team, install at project scope:
+
+```bash
+/plugin install tailwind-ui-rules@MarkBenz-claude-code-skills --scope project
+```
+
+### Option 2: Settings Configuration
+
+Add the marketplace to your Claude Code settings file (`~/.claude/settings.json` for personal use, or `.claude/settings.json` in your project for team use):
 
 ```json
 {
-  "plugins": ["/path/to/this/repo"]
+  "extraKnownMarketplaces": {
+    "MarkBenz-claude-code-skills": {
+      "source": {
+        "source": "github",
+        "repo": "MarkBenz/claude-code-skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "tailwind-ui-rules@MarkBenz-claude-code-skills": true
+  }
 }
 ```
+
+### Option 3: Local Development / Testing
+
+For temporary use in a single session (e.g., during development):
+
+```bash
+# Clone the repo
+git clone https://github.com/MarkBenz/claude-code-skills.git
+
+# Run Claude Code with the plugin directory
+claude --plugin-dir ./claude-code-skills
+```
+
+### Verification
+
+Once installed, the `tailwind-ui-rules` skill activates automatically whenever you work on frontend/UI tasks. Test it by asking Claude Code something like:
+
+> "Build a card component with TailwindCSS"
+
+The skill should load alongside the Anthropic `frontend-design` skill.
 
 ## Contributing
 
