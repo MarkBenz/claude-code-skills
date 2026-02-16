@@ -330,6 +330,106 @@ Container queries allow components to adapt based on their parent container's si
 
 **Rule**: Use container queries for reusable components. Use media queries (responsive prefixes) for page-level layout decisions. Do not mix both on the same element.
 
+## Overflow and Shadow Clipping
+
+Scrollable containers (`overflow-y-auto`, `overflow-hidden`) clip the `box-shadow` of child elements. This is one of the most common layout bugs — cards at the edges of scrollable areas have their shadows cut off.
+
+### The Root Cause
+
+When an element has `overflow: auto`, `overflow: hidden`, or `overflow: scroll`, it creates a clipping boundary. Box shadows that extend beyond this boundary are invisible. Per CSS spec, you cannot set `overflow-x: visible` and `overflow-y: auto` — the visible axis is forced to `auto`, clipping both directions.
+
+### Solution 1: Negative Margin + Padding (Recommended)
+
+Add negative margins on the scroll container to expand it, then compensate with padding so content stays positioned correctly. Shadows now have space to render.
+
+```html
+<!-- Scrollable card list with visible shadows -->
+<div class="-mx-4 px-4 overflow-y-auto max-h-[500px]">
+  <div class="space-y-4 py-1">
+    <div class="rounded-lg bg-white p-6 shadow-md hover:shadow-lg transition-shadow">
+      Card 1 — shadow is fully visible
+    </div>
+    <div class="rounded-lg bg-white p-6 shadow-md hover:shadow-lg transition-shadow">
+      Card 2 — no clipping on sides
+    </div>
+  </div>
+</div>
+```
+
+Rules:
+- Match the negative margin to the padding: `-mx-4` with `px-4`, or `-mx-3` with `px-3`.
+- The margin/padding size must be at least as large as the shadow spread. `shadow-md` spreads ~6px, so `-mx-2 px-2` (8px) is sufficient. `shadow-lg` spreads ~10px, so use `-mx-3 px-3` (12px) minimum.
+- Add `py-1` on the inner content wrapper to prevent top/bottom shadow clipping too.
+
+### Solution 2: Overflow Clip (Modern CSS)
+
+`overflow: clip` allows directional control — you can clip on one axis while keeping the other visible:
+
+```html
+<!-- Clip only vertically, let shadows escape horizontally -->
+<div class="max-h-[500px] [overflow-y:auto] [overflow-x:clip]">
+  <div class="rounded-lg shadow-lg p-6">Shadow extends left/right freely.</div>
+</div>
+```
+
+Note: `overflow: clip` has good but not universal browser support. Use Solution 1 as a fallback for production.
+
+### Horizontal Scroll with Shadow Preservation
+
+```html
+<!-- Horizontal scrollable card carousel -->
+<div class="-mx-4 px-4 -my-2 py-2 overflow-x-auto overflow-y-visible">
+  <div class="flex gap-4 w-max">
+    <div class="flex-none w-72 rounded-lg bg-white p-4 shadow-lg">Card 1</div>
+    <div class="flex-none w-72 rounded-lg bg-white p-4 shadow-lg">Card 2</div>
+    <div class="flex-none w-72 rounded-lg bg-white p-4 shadow-lg">Card 3</div>
+  </div>
+</div>
+```
+
+- `-mx-4 px-4` preserves side shadows.
+- `-my-2 py-2` preserves top/bottom shadows.
+- `flex-none w-72` prevents cards from shrinking in the flex container.
+
+### Scroll Indicator Shadows
+
+Show users that content is scrollable by adding top/bottom gradient shadows that appear on scroll:
+
+```html
+<!-- Scroll container with gradient indicators (CSS-only) -->
+<div class="relative">
+  <!-- Top fade indicator -->
+  <div class="pointer-events-none absolute top-0 left-0 right-0 z-10 h-6
+    bg-gradient-to-b from-white to-transparent dark:from-gray-900
+  "></div>
+
+  <!-- Scrollable content -->
+  <div class="overflow-y-auto max-h-96 px-1">
+    <!-- Content -->
+  </div>
+
+  <!-- Bottom fade indicator -->
+  <div class="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-6
+    bg-gradient-to-t from-white to-transparent dark:from-gray-900
+  "></div>
+</div>
+```
+
+Rules:
+- `pointer-events-none` makes the gradient overlays click-through.
+- Match the gradient `from-` color to the page background color. Use `dark:from-gray-900` for dark mode.
+- Height `h-6` (24px) is a good default. Use `h-4` for compact lists, `h-8` for spacious layouts.
+- For a more dynamic approach (show/hide based on scroll position), use JavaScript with IntersectionObserver on sentinel elements.
+
+### Overflow Shadow Anti-Patterns
+
+| Don't | Why | Do Instead |
+|-------|-----|-----------|
+| `overflow-hidden` on a card grid container | Clips shadows of edge cards | Use the negative margin + padding trick |
+| `shadow-xl` on cards inside `overflow-y-auto` | Large shadows need large compensation margins | Use `shadow-md` maximum inside scroll containers, or expand margins |
+| Scroll container without any scroll indicators | Users don't know content is scrollable | Add gradient fade overlays at top/bottom |
+| `rounded-xl overflow-hidden` on parent wrapping shadowed children | Rounded corners + overflow-hidden clips child shadows aggressively | Apply rounding to individual children, not the parent |
+
 ## Common Spacing Mistakes
 
 | Mistake | Fix |

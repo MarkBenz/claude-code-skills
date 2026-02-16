@@ -58,7 +58,9 @@ All sibling elements within a section **must share consistent alignment edges**.
 - All content blocks within a section share the same left padding edge. If a heading and its paragraph have different left offsets, it is a bug.
 - Avoid `w-full` on elements inside flex containers when you actually need `flex-1` or `flex-grow`.
 
-See `references/layout-and-spacing.md` for flex patterns, grid patterns, bento grids, container queries, flush alignment examples, and spacing scale reference.
+**Overflow and shadow clipping:** Scrollable containers (`overflow-y-auto`) clip child shadows. Fix with the negative margin + padding trick: `-mx-4 px-4` on the scroll container creates space for shadows to render. Match the margin size to your shadow spread.
+
+See `references/layout-and-spacing.md` for flex patterns, grid patterns, bento grids, container queries, overflow/shadow clipping solutions, flush alignment examples, and spacing scale reference.
 
 ---
 
