@@ -13,7 +13,7 @@
       "author": {
         "name": "Mark Benz"
       },
-      "source": ".",
+      "source": "./plugins/claude-code-skills",
       "category": "frontend",
       "keywords": ["tailwindcss", "frontend", "ui", "ux", "design", "components", "color-palette"],
       "license": "MIT"
