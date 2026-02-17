@@ -110,13 +110,13 @@ Add this repository as a plugin marketplace so Claude Code can discover and mana
 Then install the skill:
 
 ```bash
-/plugin install tailwind-ui-rules@MarkBenz-claude-code-skills
+/plugin install claude-code-skills@claude-code-skills
 ```
 
 To share with your team, install at project scope:
 
 ```bash
-/plugin install tailwind-ui-rules@MarkBenz-claude-code-skills --scope project
+/plugin install claude-code-skills@claude-code-skills --scope project
 ```
 
 ### Option 2: Settings Configuration
@@ -134,7 +134,7 @@ Add the marketplace to your Claude Code settings file (`~/.claude/settings.json`
     }
   },
   "enabledPlugins": {
-    "tailwind-ui-rules@MarkBenz-claude-code-skills": true
+    "claude-code-skills@claude-code-skills": true
   }
 }
 ```
